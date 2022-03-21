@@ -1,0 +1,143 @@
+﻿<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ http://wowprogramming.com/FrameXML/UI.xsd">
+
+<Frame name="MachinimaTool" hidden="true" parent="InterfaceOptionsFramePanelContainer">
+  <Layers>
+    <Layer level="ARTWORK">
+      <FontString name="$parentTitle" text="Machinima Tool" inherits="GameFontNormalLarge" justifyH="LEFT" justifyV="TOP">
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="16" y="-16"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </FontString>
+      <FontString name="$parentSubText" text="These options allow you to control various world settings." inherits="GameFontHighlightSmall" nonspacewrap="true" maxLines="3" justifyH="LEFT" justifyV="TOP">
+        <Size>
+          <AbsDimension y="32" x="0"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-8"/>
+            </Offset>
+          </Anchor>
+          <Anchor point="RIGHT">
+            <Offset>
+              <AbsDimension x="-32" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </FontString>
+      <FontString name="$parentWorldTimeText" text="World Time Locker" inherits="GameFontNormal" justifyH="CENTER" justifyV="TOP">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-8"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </FontString>
+    </Layer>
+  </Layers>
+  <Frames>
+    <Frame name="$parentAlarmHourDropDown" inherits="UIDropDownMenuTemplate">
+      <Anchors>
+        <Anchor point="TOPLEFT" relativeTo="$parentWorldTimeText" relativePoint="BOTTOMLEFT" x="-20" y="-4"/>
+      </Anchors>
+    </Frame>
+    <Frame name="$parentAlarmMinuteDropDown" inherits="UIDropDownMenuTemplate">
+      <Anchors>
+        <Anchor point="LEFT" relativeTo="$parentAlarmHourDropDown" relativePoint="RIGHT" x="-22" y="0"/>
+      </Anchors>
+    </Frame>
+    <Button name="$parentAlarmResetButton" inherits="UIPanelButtonTemplate" text="Reset">
+      <Size>
+        <AbsDimension x="128" y="22"/>
+      </Size>
+      <Anchors>
+        <Anchor point="LEFT" relativeTo="$parentAlarmMinuteDropDown" relativePoint="RIGHT" x="20" y="2"/>
+      </Anchors>
+      <Scripts>
+        <OnClick>
+          PlaySound("gsTitleOptionOK");
+          MachinimaTool_ResetTimeLocker();
+        </OnClick>
+      </Scripts>
+      <NormalFont style="GameFontNormalSmall"/>
+      <HighlightFont style="GameFontHighlightSmall"/>
+    </Button>
+    <Slider name="$parentWorldTimeSpeed" inherits="OptionsSliderTemplate">
+      <Anchors>
+        <Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT" x="0" y="-78"/>
+      </Anchors>
+      <Layers>
+        <Layer level="ARTWORK">
+          <FontString name="$parentCurrent" parentKey="Current" inherits="GameFontNormalSmall">
+            <Anchors>
+              <Anchor point="TOP" relativePoint="BOTTOM" x="0" y="-2"/>
+            </Anchors>
+          </FontString>
+        </Layer>
+      </Layers>
+      <Scripts>
+        <OnLoad>
+          local low = _G[self:GetName().."Low"]
+          low:SetText("Default")
+          local high = _G[self:GetName().."High"]
+          high:SetText("Faster")
+          self.type = CONTROLTYPE_SLIDER;
+          self.cvar = "C_CVAR_WORLD_TIME_SPEED";
+          self.SetDisplayValue = self.SetValue;
+          self.SetValue = function (self, value)
+            BlizzardOptionsPanel_SetCVarSafe(self.cvar, value);
+            SetWorldTimeSpeed(value);
+          end
+          BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
+        </OnLoad>
+        <OnValueChanged>
+          self.newValue = value;
+          SetWorldTimeSpeed(value);
+        </OnValueChanged>
+      </Scripts>
+    </Slider>
+    <Slider name="$parentWorldNightLight" inherits="OptionsSliderTemplate">
+      <Anchors>
+        <Anchor point="TOPLEFT" relativeTo="$parentWorldTimeSpeed" relativePoint="BOTTOMLEFT" x="0" y="-36"/>
+      </Anchors>
+      <Layers>
+        <Layer level="ARTWORK">
+          <FontString name="$parentCurrent" parentKey="Current" inherits="GameFontNormalSmall">
+            <Anchors>
+              <Anchor point="TOP" relativePoint="BOTTOM" x="0" y="-2"/>
+            </Anchors>
+          </FontString>
+        </Layer>
+      </Layers>
+      <Scripts>
+        <OnLoad>
+          local low = _G[self:GetName().."Low"]
+          low:SetText("Default")
+          local high = _G[self:GetName().."High"]
+          high:SetText("Darker")
+          self.type = CONTROLTYPE_SLIDER;
+          self.cvar = "C_CVAR_WORLD_NIGHTLIGHT";
+          self.SetDisplayValue = self.SetValue;
+          self.SetValue = function (self, value)
+            BlizzardOptionsPanel_SetCVarSafe(self.cvar, value);
+          end
+          BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
+        </OnLoad>
+        <OnValueChanged>
+          self.newValue = value;
+        </OnValueChanged>
+      </Scripts>
+    </Slider>
+  </Frames>
+  <Scripts>
+    <OnLoad>
+      MachinimaTool_OnLoad(self);
+    </OnLoad>
+  </Scripts>
+</Frame>
+</Ui>
