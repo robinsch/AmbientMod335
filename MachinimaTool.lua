@@ -1,34 +1,48 @@
+local addonName = ...
 --
 -- Set Custom Interface CVar Defaults
 --
-C_CVar:SetDefault("C_CVAR_WORLD_TIME_SPEED", 0.0166666675359011)
-C_CVar:SetDefault("C_CVAR_WORLD_TIME_SPEED_MIN", 0.0166666675359011)
-C_CVar:SetDefault("C_CVAR_WORLD_TIME_SPEED_MAX", 50)
+local defaults = {
+	worldTimeSpeed = 0.0166666675359011,
+	worldTimeSpeedMin = 0.0166666675359011,
+	worldTimeSpeedMax = 50,
+	worldNightLight = 1,
+	worldNightLightMin = 0,
+	worldNightLightMax = 1,
+}
 
-C_CVar:SetDefault("C_CVAR_WORLD_NIGHTLIGHT", 1)
-C_CVar:SetDefault("C_CVAR_WORLD_NIGHTLIGHT_MIN", 0)
-C_CVar:SetDefault("C_CVAR_WORLD_NIGHTLIGHT_MAX", 1)
-
-local function CustomCVarsLoaded()
-	SetWorldTimeSpeed(C_CVar:Get("C_CVAR_WORLD_TIME_SPEED"))
-	SetWorldTimeSpeed(C_CVar:Get("C_CVAR_WORLD_NIGHTLIGHT"))
-end
-
-C_Hook:Register("InterfaceOptions", "VARIABLES_LOADED", CustomCVarsLoaded)
+RegisterCVar("MT_WorldTimeSpeed", defaults.worldTimeSpeed)
+RegisterCVar("MT_NightLight", defaults.worldNightLight)
 
 -- [[ MachinimaTool Options Panel ]] --
 
 MachinimaToolPanelOptions = {
-	C_CVAR_WORLD_TIME_SPEED = { text = "World Time Speed Rate", minValue = GetCVarMin("C_CVAR_WORLD_TIME_SPEED"), maxValue = GetCVarMax("C_CVAR_WORLD_TIME_SPEED"), valueStep = 0.5, },
-	C_CVAR_WORLD_NIGHTLIGHT = { text = "Nightlight", minValue = GetCVarMin("C_CVAR_WORLD_NIGHTLIGHT"), maxValue = GetCVarMax("C_CVAR_WORLD_NIGHTLIGHT"), valueStep = 0.05, },
+	MT_WorldTimeSpeed = { text = "World Time Speed Rate", minValue = defaults.worldTimeSpeedMin, maxValue = defaults.worldTimeSpeedMax, valueStep = 0.5, },
+	MT_NightLight = { text = "Nightlight", minValue = defaults.worldNightLightMin, maxValue = defaults.worldNightLightMax, valueStep = 0.05, },
 }
 
 -- @robinsch: init these with game time
 local SET_HOUR = select(1, GetGameTime());
 local SET_MINUTE = select(2, GetGameTime());
 
+function MachinimaTool_UpdateSettings(cvar, value)
+	MachinimaToolDB[cvar] = value
+
+	if cvar == "MT_WorldTimeSpeed" then
+		SetWorldTimeSpeed(value)
+	elseif cvar == "MT_NightLight" then
+		-- ??
+	end
+end
+
+function MachinimaTool_RefreshSettings()
+	MachinimaTool_UpdateSettings("MT_WorldTimeSpeed", C_CVar.GetNumber("MT_WorldTimeSpeed"))
+	MachinimaTool_UpdateSettings("MT_NightLight", C_CVar.GetNumber("MT_NightLight"))
+end
+
 function MachinimaTool_OnLoad(self)
-	self.name = "MachinimaTool";
+	self:RegisterEvent("ADDON_LOADED")
+	self.name = addonName;
 	self.options = MachinimaToolPanelOptions;
 
 	UIDropDownMenu_SetWidth(MachinimaToolAlarmHourDropDown, 30, 40);
@@ -38,8 +52,22 @@ function MachinimaTool_OnLoad(self)
 	UIDropDownMenu_SetWidth(MachinimaToolAlarmMinuteDropDown, 30, 40);
 	UIDropDownMenu_SetText(MachinimaToolAlarmMinuteDropDown, format(TIMEMANAGER_MINUTE, 0));
 	UIDropDownMenu_Initialize(MachinimaToolAlarmMinuteDropDown, AlarmMinuteDropDown_Initialize);
+end
 
-	InterfaceOptionsPanel_OnLoad(self);
+function MachinimaTool_OnEvent(self, event, ...)
+	if event == "ADDON_LOADED" then
+		local addon = ...
+		if addon == addonName then
+			MachinimaToolDB = MachinimaToolDB or {
+				MT_WorldTimeSpeed = defaults.worldTimeSpeed,
+				MT_NightLight = defaults.worldNightLight
+			}
+			SetCVar("MT_WorldTimeSpeed", MachinimaToolDB["MT_WorldTimeSpeed"])
+			SetCVar("MT_NightLight", MachinimaToolDB["MT_NightLight"])
+			MachinimaTool_RefreshSettings()
+			InterfaceOptionsPanel_OnLoad(self);
+		end
+	end
 end
 
 function MachinimaTool_ResetTimeLocker()

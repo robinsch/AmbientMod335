@@ -87,17 +87,18 @@
           local high = _G[self:GetName().."High"]
           high:SetText("Faster")
           self.type = CONTROLTYPE_SLIDER;
-          self.cvar = "C_CVAR_WORLD_TIME_SPEED";
+          self.cvar = "MT_WorldTimeSpeed";
           self.SetDisplayValue = self.SetValue;
           self.SetValue = function (self, value)
             BlizzardOptionsPanel_SetCVarSafe(self.cvar, value);
-            SetWorldTimeSpeed(value);
+            MachinimaTool_UpdateSettings(self.cvar, value)
           end
           BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
         </OnLoad>
         <OnValueChanged>
           self.newValue = value;
-          SetWorldTimeSpeed(value);
+          MachinimaTool_UpdateSettings(self.cvar, value)
+          _G[self:GetName().."Value"]:SetText(MTrunc(value, 2))
         </OnValueChanged>
       </Scripts>
     </Slider>
@@ -121,23 +122,25 @@
           local high = _G[self:GetName().."High"]
           high:SetText("Darker")
           self.type = CONTROLTYPE_SLIDER;
-          self.cvar = "C_CVAR_WORLD_NIGHTLIGHT";
+          self.cvar = "MT_NightLight";
           self.SetDisplayValue = self.SetValue;
           self.SetValue = function (self, value)
             BlizzardOptionsPanel_SetCVarSafe(self.cvar, value);
+            MachinimaTool_UpdateSettings(self.cvar, value)
           end
           BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
         </OnLoad>
         <OnValueChanged>
           self.newValue = value;
+          MachinimaTool_UpdateSettings(self.cvar, value)
+          _G[self:GetName().."Value"]:SetText(MTrunc(value, 2))
         </OnValueChanged>
       </Scripts>
     </Slider>
   </Frames>
   <Scripts>
-    <OnLoad>
-      MachinimaTool_OnLoad(self);
-    </OnLoad>
+    <OnLoad function="MachinimaTool_OnLoad"/>
+    <OnEvent function="MachinimaTool_OnEvent"/>
   </Scripts>
 </Frame>
 </Ui>
