@@ -98,7 +98,6 @@
         <OnValueChanged>
           self.newValue = value;
           MachinimaTool_UpdateSettings(self.cvar, value)
-          _G[self:GetName().."Value"]:SetText(MTrunc(value, 2))
         </OnValueChanged>
       </Scripts>
     </Slider>
@@ -133,10 +132,37 @@
         <OnValueChanged>
           self.newValue = value;
           MachinimaTool_UpdateSettings(self.cvar, value)
-          _G[self:GetName().."Value"]:SetText(MTrunc(value, 2))
         </OnValueChanged>
       </Scripts>
     </Slider>
+    <CheckButton name="$parentWMOCulling" inherits="InterfaceOptionsCheckButtonTemplate">
+      <Anchors>
+        <Anchor point="TOPLEFT" relativeTo="$parentWorldNightLight" relativePoint="BOTTOMLEFT">
+          <Offset x="0" y="-18"/>
+        </Anchor>
+      </Anchors>
+      <Scripts>
+        <OnLoad>
+          self.type = CONTROLTYPE_CHECKBOX;
+          self.cvar = "wmoCulling";
+          BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
+        </OnLoad>
+      </Scripts>
+    </CheckButton>
+    <CheckButton name="$parentTerrainCulling" inherits="InterfaceOptionsCheckButtonTemplate">
+      <Anchors>
+        <Anchor point="TOPLEFT" relativeTo="$parentWMOCulling" relativePoint="BOTTOMLEFT">
+          <Offset x="0" y="-18"/>
+        </Anchor>
+      </Anchors>
+      <Scripts>
+        <OnLoad>
+          self.type = CONTROLTYPE_CHECKBOX;
+          self.cvar = "terrainCulling";
+          BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
+        </OnLoad>
+      </Scripts>
+    </CheckButton>
   </Frames>
   <Scripts>
     <OnLoad function="MachinimaTool_OnLoad"/>

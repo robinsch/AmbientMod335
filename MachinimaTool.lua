@@ -19,6 +19,8 @@ RegisterCVar("MT_NightLight", defaults.worldNightLight)
 MachinimaToolPanelOptions = {
 	MT_WorldTimeSpeed = { text = "World Time Speed Rate", minValue = defaults.worldTimeSpeedMin, maxValue = defaults.worldTimeSpeedMax, valueStep = 0.5, },
 	MT_NightLight = { text = "Nightlight", minValue = defaults.worldNightLightMin, maxValue = defaults.worldNightLightMax, valueStep = 0.05, },
+	wmoCulling = { text = "WMO Culling" },
+	terrainCulling = { text = "Terrain Culling" },
 }
 
 -- @robinsch: init these with game time
@@ -36,8 +38,8 @@ function MachinimaTool_UpdateSettings(cvar, value)
 end
 
 function MachinimaTool_RefreshSettings()
-	MachinimaTool_UpdateSettings("MT_WorldTimeSpeed", C_CVar.GetNumber("MT_WorldTimeSpeed"))
-	MachinimaTool_UpdateSettings("MT_NightLight", C_CVar.GetNumber("MT_NightLight"))
+	MachinimaTool_UpdateSettings("MT_WorldTimeSpeed", tonumber(GetCVar("MT_WorldTimeSpeed")))
+	MachinimaTool_UpdateSettings("MT_NightLight", tonumber(GetCVar("MT_NightLight")))
 end
 
 function MachinimaTool_OnLoad(self)
