@@ -41,22 +41,22 @@
     </Layer>
   </Layers>
   <Frames>
-    <Frame name="$parentAlarmHourDropDown" inherits="UIDropDownMenuTemplate">
+    <Frame name="$parentHourDropDown" inherits="UIDropDownMenuTemplate">
       <Anchors>
         <Anchor point="TOPLEFT" relativeTo="$parentWorldTimeText" relativePoint="BOTTOMLEFT" x="-20" y="-4"/>
       </Anchors>
     </Frame>
-    <Frame name="$parentAlarmMinuteDropDown" inherits="UIDropDownMenuTemplate">
+    <Frame name="$parentMinuteDropDown" inherits="UIDropDownMenuTemplate">
       <Anchors>
-        <Anchor point="LEFT" relativeTo="$parentAlarmHourDropDown" relativePoint="RIGHT" x="-22" y="0"/>
+        <Anchor point="LEFT" relativeTo="$parentHourDropDown" relativePoint="RIGHT" x="-22" y="0"/>
       </Anchors>
     </Frame>
-    <Button name="$parentAlarmResetButton" inherits="UIPanelButtonTemplate" text="Reset">
+    <Button name="$parentResetButton" inherits="UIPanelButtonTemplate" text="Reset">
       <Size>
         <AbsDimension x="128" y="22"/>
       </Size>
       <Anchors>
-        <Anchor point="LEFT" relativeTo="$parentAlarmMinuteDropDown" relativePoint="RIGHT" x="20" y="2"/>
+        <Anchor point="LEFT" relativeTo="$parentMinuteDropDown" relativePoint="RIGHT" x="20" y="2"/>
       </Anchors>
       <Scripts>
         <OnClick>
@@ -135,9 +135,43 @@
         </OnValueChanged>
       </Scripts>
     </Slider>
+    <Slider name="$parentWorldLightAttenuation" inherits="OptionsSliderTemplate">
+      <Anchors>
+        <Anchor point="TOPLEFT" relativeTo="$parentWorldNightLight" relativePoint="BOTTOMLEFT" x="0" y="-36"/>
+      </Anchors>
+      <Layers>
+        <Layer level="ARTWORK">
+          <FontString name="$parentCurrent" parentKey="Current" inherits="GameFontNormalSmall">
+            <Anchors>
+              <Anchor point="TOP" relativePoint="BOTTOM" x="0" y="-2"/>
+            </Anchors>
+          </FontString>
+        </Layer>
+      </Layers>
+      <Scripts>
+        <OnLoad>
+          local low = _G[self:GetName().."Low"]
+          low:SetText("Lower")
+          local high = _G[self:GetName().."High"]
+          high:SetText("Default")
+          self.type = CONTROLTYPE_SLIDER;
+          self.cvar = "MT_LightAttenuation";
+          self.SetDisplayValue = self.SetValue;
+          self.SetValue = function (self, value)
+          BlizzardOptionsPanel_SetCVarSafe(self.cvar, value);
+          MachinimaTool_UpdateSettings(self.cvar, value)
+          end
+          BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
+        </OnLoad>
+        <OnValueChanged>
+          self.newValue = value;
+          MachinimaTool_UpdateSettings(self.cvar, value)
+        </OnValueChanged>
+      </Scripts>
+    </Slider>
     <CheckButton name="$parentWMOCulling" inherits="InterfaceOptionsCheckButtonTemplate">
       <Anchors>
-        <Anchor point="TOPLEFT" relativeTo="$parentWorldNightLight" relativePoint="BOTTOMLEFT">
+        <Anchor point="TOPLEFT" relativeTo="$parentWorldLightAttenuation" relativePoint="BOTTOMLEFT">
           <Offset x="0" y="-18"/>
         </Anchor>
       </Anchors>
