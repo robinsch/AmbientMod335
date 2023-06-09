@@ -117,15 +117,15 @@
       <Scripts>
         <OnLoad>
           local low = _G[self:GetName().."Low"]
-          low:SetText("Default")
+          low:SetText("Darker")
           local high = _G[self:GetName().."High"]
-          high:SetText("Darker")
+          high:SetText("Default")
           self.type = CONTROLTYPE_SLIDER;
           self.cvar = "MT_NightLight";
           self.SetDisplayValue = self.SetValue;
           self.SetValue = function (self, value)
-            BlizzardOptionsPanel_SetCVarSafe(self.cvar, value);
-            MachinimaTool_UpdateSettings(self.cvar, value)
+          BlizzardOptionsPanel_SetCVarSafe(self.cvar, value);
+          MachinimaTool_UpdateSettings(self.cvar, value)
           end
           BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
         </OnLoad>
@@ -135,7 +135,7 @@
         </OnValueChanged>
       </Scripts>
     </Slider>
-    <Slider name="$parentWorldLightAttenuation" inherits="OptionsSliderTemplate">
+    <Slider name="$parentWorldLightLinearAttenuation" inherits="OptionsSliderTemplate">
       <Anchors>
         <Anchor point="TOPLEFT" relativeTo="$parentWorldNightLight" relativePoint="BOTTOMLEFT" x="0" y="-36"/>
       </Anchors>
@@ -155,7 +155,41 @@
           local high = _G[self:GetName().."High"]
           high:SetText("Default")
           self.type = CONTROLTYPE_SLIDER;
-          self.cvar = "MT_LightAttenuation";
+          self.cvar = "MT_LightLinearAttenuation";
+          self.SetDisplayValue = self.SetValue;
+          self.SetValue = function (self, value)
+          BlizzardOptionsPanel_SetCVarSafe(self.cvar, value);
+          MachinimaTool_UpdateSettings(self.cvar, value)
+          end
+          BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
+        </OnLoad>
+        <OnValueChanged>
+          self.newValue = value;
+          MachinimaTool_UpdateSettings(self.cvar, value)
+        </OnValueChanged>
+      </Scripts>
+    </Slider>
+    <Slider name="$parentWorldLightQuadraticAttenuation" inherits="OptionsSliderTemplate">
+      <Anchor point="TOPLEFT" relativeTo="$parentWorldLightLinearAttenuation" relativePoint="RIGHT">
+        <Offset x="138" y="0"/>
+      </Anchor>
+      <Layers>
+        <Layer level="ARTWORK">
+          <FontString name="$parentCurrent" parentKey="Current" inherits="GameFontNormalSmall">
+            <Anchors>
+              <Anchor point="TOP" relativePoint="BOTTOM" x="0" y="-2"/>
+            </Anchors>
+          </FontString>
+        </Layer>
+      </Layers>
+      <Scripts>
+        <OnLoad>
+          local low = _G[self:GetName().."Low"]
+          low:SetText("Lower")
+          local high = _G[self:GetName().."High"]
+          high:SetText("Default")
+          self.type = CONTROLTYPE_SLIDER;
+          self.cvar = "MT_LightQuadraticAttenuation";
           self.SetDisplayValue = self.SetValue;
           self.SetValue = function (self, value)
           BlizzardOptionsPanel_SetCVarSafe(self.cvar, value);
@@ -171,7 +205,7 @@
     </Slider>
     <CheckButton name="$parentWMOCulling" inherits="InterfaceOptionsCheckButtonTemplate">
       <Anchors>
-        <Anchor point="TOPLEFT" relativeTo="$parentWorldLightAttenuation" relativePoint="BOTTOMLEFT">
+        <Anchor point="TOPLEFT" relativeTo="$parentWorldLightLinearAttenuation" relativePoint="BOTTOMLEFT">
           <Offset x="0" y="-18"/>
         </Anchor>
       </Anchors>

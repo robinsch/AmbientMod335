@@ -9,21 +9,26 @@ local defaults = {
 	worldNightLight = 1,
 	worldNightLightMin = 0.1,
 	worldNightLightMax = 1,
-	worldLightAttenuation = 1,
-	worldLightAttenuationMin = 0.05,
-	worldLightAttenuationMax = 1,
+	worldLightLinearAttenuation = 1,
+	worldLightLinearAttenuationMin = 0.05,
+	worldLightLinearAttenuationMax = 1,
+	worldLightQuadraticAttenuation = 1,
+	worldLightQuadraticAttenuationMin = 0.05,
+	worldLightQuadraticAttenuationMax = 1,
 }
 
 RegisterCVar("MT_WorldTimeSpeed", defaults.worldTimeSpeed)
 RegisterCVar("MT_NightLight", defaults.worldNightLight)
-RegisterCVar("MT_LightAttenuation", defaults.worldNightLight)
+RegisterCVar("MT_LightLinearAttenuation", defaults.worldLightLinearAttenuation)
+RegisterCVar("MT_LightQuadraticAttenuation", defaults.worldLightQuadraticAttenuation)
 
 -- [[ MachinimaTool Options Panel ]] --
 
 MachinimaToolPanelOptions = {
 	MT_WorldTimeSpeed = { text = "World Time Speed Rate", minValue = defaults.worldTimeSpeedMin, maxValue = defaults.worldTimeSpeedMax, valueStep = 0.5, },
 	MT_NightLight = { text = "Ambient Shade", minValue = defaults.worldNightLightMin, maxValue = defaults.worldNightLightMax, valueStep = 0.05, },
-	MT_LightAttenuation = { text = "Light Attenuation", minValue = defaults.worldLightAttenuationMin, maxValue = defaults.worldLightAttenuationMax, valueStep = 0.025, },
+	MT_LightLinearAttenuation = { text = "Light Linear Attenuation", minValue = defaults.worldLightLinearAttenuationMin, maxValue = defaults.worldLightLinearAttenuationMax, valueStep = 0.025, },
+	MT_LightQuadraticAttenuation = { text = "Light Quadratic Attenuation", minValue = defaults.worldLightQuadraticAttenuationMin, maxValue = defaults.worldLightQuadraticAttenuationMax, valueStep = 0.025, },
 	wmoCulling = { text = "WMO Culling" },
 	terrainCulling = { text = "Terrain Culling" },
 }
@@ -39,15 +44,18 @@ function MachinimaTool_UpdateSettings(cvar, value)
 		SetWorldTimeSpeed(value)
 	elseif cvar == "MT_NightLight" then
 		SetCVar("ambientShade", MachinimaToolDB["MT_NightLight"])
-	elseif cvar == "MT_LightAttenuation" then
-		SetCVar("lightAttenuation", MachinimaToolDB["MT_LightAttenuation"])
+	elseif cvar == "MT_LightLinearAttenuation" then
+		SetCVar("lightLinearAttenuation", MachinimaToolDB["MT_LightLinearAttenuation"])
+	elseif cvar == "MT_LightQuadraticAttenuation" then
+		SetCVar("lightQuadraticAttenuation", MachinimaToolDB["MT_LightQuadraticAttenuation"])
 	end
 end
 
 function MachinimaTool_RefreshSettings()
 	MachinimaTool_UpdateSettings("MT_WorldTimeSpeed", tonumber(GetCVar("MT_WorldTimeSpeed")))
 	MachinimaTool_UpdateSettings("MT_NightLight", tonumber(GetCVar("MT_NightLight")))
-	MachinimaTool_UpdateSettings("MT_LightAttenuation", tonumber(GetCVar("MT_LightAttenuation")))
+	MachinimaTool_UpdateSettings("MT_LightLinearAttenuation", tonumber(GetCVar("MT_LightLinearAttenuation")))
+	MachinimaTool_UpdateSettings("MT_LightQuadraticAttenuation", tonumber(GetCVar("MT_LightQuadraticAttenuation")))
 end
 
 function MachinimaTool_OnLoad(self)
@@ -70,10 +78,14 @@ function MachinimaTool_OnEvent(self, event, ...)
 		if addon == addonName then
 			MachinimaToolDB = MachinimaToolDB or {
 				MT_WorldTimeSpeed = defaults.worldTimeSpeed,
-				MT_NightLight = defaults.worldNightLight
+				MT_NightLight = defaults.worldNightLight,
+				MT_LightLinearAttenuation = defaults.worldLightLinearAttenuation,
+				MT_LightQuadraticAttenuation = defaults.worldLightQuadraticAttenuation,
 			}
 			SetCVar("MT_WorldTimeSpeed", MachinimaToolDB["MT_WorldTimeSpeed"])
-			SetCVar("ambientShade", MachinimaToolDB["MT_NightLight"])
+			SetCVar("MT_NightLight", MachinimaToolDB["MT_NightLight"])
+			SetCVar("MT_LightLinearAttenuation", MachinimaToolDB["MT_LightLinearAttenuation"])
+			SetCVar("MT_LightQuadraticAttenuation", MachinimaToolDB["MT_LightQuadraticAttenuation"])
 			MachinimaTool_RefreshSettings()
 			InterfaceOptionsPanel_OnLoad(self);
 		end
