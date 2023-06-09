@@ -7,13 +7,13 @@ local defaults = {
 	worldTimeSpeedMin = 0.0166666675359011,
 	worldTimeSpeedMax = 50,
 	worldNightLight = 1,
-	worldNightLightMin = 0.1,
+	worldNightLightMin = 0.05,
 	worldNightLightMax = 1,
 	worldLightLinearAttenuation = 1,
-	worldLightLinearAttenuationMin = 0.05,
+	worldLightLinearAttenuationMin = 0.005,
 	worldLightLinearAttenuationMax = 1,
 	worldLightQuadraticAttenuation = 1,
-	worldLightQuadraticAttenuationMin = 0.05,
+	worldLightQuadraticAttenuationMin = 0.005,
 	worldLightQuadraticAttenuationMax = 1,
 }
 
@@ -26,9 +26,9 @@ RegisterCVar("MT_LightQuadraticAttenuation", defaults.worldLightQuadraticAttenua
 
 MachinimaToolPanelOptions = {
 	MT_WorldTimeSpeed = { text = "World Time Speed Rate", minValue = defaults.worldTimeSpeedMin, maxValue = defaults.worldTimeSpeedMax, valueStep = 0.5, },
-	MT_NightLight = { text = "Ambient Shade", minValue = defaults.worldNightLightMin, maxValue = defaults.worldNightLightMax, valueStep = 0.05, },
-	MT_LightLinearAttenuation = { text = "Light Linear Attenuation", minValue = defaults.worldLightLinearAttenuationMin, maxValue = defaults.worldLightLinearAttenuationMax, valueStep = 0.025, },
-	MT_LightQuadraticAttenuation = { text = "Light Quadratic Attenuation", minValue = defaults.worldLightQuadraticAttenuationMin, maxValue = defaults.worldLightQuadraticAttenuationMax, valueStep = 0.025, },
+	MT_NightLight = { text = "Ambient Shade", minValue = defaults.worldNightLightMin, maxValue = defaults.worldNightLightMax, valueStep = 0.005, },
+	MT_LightLinearAttenuation = { text = "Light Linear Attenuation", minValue = defaults.worldLightLinearAttenuationMin, maxValue = defaults.worldLightLinearAttenuationMax, valueStep = 0.0025, },
+	MT_LightQuadraticAttenuation = { text = "Light Quadratic Attenuation", minValue = defaults.worldLightQuadraticAttenuationMin, maxValue = defaults.worldLightQuadraticAttenuationMax, valueStep = 0.0025, },
 	wmoCulling = { text = "WMO Culling" },
 	terrainCulling = { text = "Terrain Culling" },
 }

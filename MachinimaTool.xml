@@ -170,9 +170,9 @@
       </Scripts>
     </Slider>
     <Slider name="$parentWorldLightQuadraticAttenuation" inherits="OptionsSliderTemplate">
-      <Anchor point="TOPLEFT" relativeTo="$parentWorldLightLinearAttenuation" relativePoint="RIGHT">
-        <Offset x="138" y="0"/>
-      </Anchor>
+      <Anchors>
+        <Anchor point="TOPLEFT" relativeTo="$parentWorldLightLinearAttenuation" relativePoint="TOPRIGHT" x="26" y="0"/>
+      </Anchors>
       <Layers>
         <Layer level="ARTWORK">
           <FontString name="$parentCurrent" parentKey="Current" inherits="GameFontNormalSmall">
