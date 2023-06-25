@@ -31,6 +31,7 @@ MachinimaToolPanelOptions = {
 	MT_LightQuadraticAttenuation = { text = "Light Quadratic Attenuation", minValue = defaults.worldLightQuadraticAttenuationMin, maxValue = defaults.worldLightQuadraticAttenuationMax, valueStep = 0.0025, },
 	wmoCulling = { text = "WMO Culling" },
 	terrainCulling = { text = "Terrain Culling" },
+	useAlphaAmbienceSound = { text = "Ambience Sound (Alpha Client 0.5.3)" },
 }
 
 -- @robinsch: init these with game time
