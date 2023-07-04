@@ -15,12 +15,15 @@ local defaults = {
 	worldLightQuadraticAttenuation = 1,
 	worldLightQuadraticAttenuationMin = 0.005,
 	worldLightQuadraticAttenuationMax = 1,
+	overrideDayProgress = 0.0,
 }
 
 RegisterCVar("MT_WorldTimeSpeed", defaults.worldTimeSpeed)
+RegisterCVar("MT_WorldTimeSpeed", defaults.overrideDayProgress)
 RegisterCVar("MT_NightLight", defaults.worldNightLight)
 RegisterCVar("MT_LightLinearAttenuation", defaults.worldLightLinearAttenuation)
 RegisterCVar("MT_LightQuadraticAttenuation", defaults.worldLightQuadraticAttenuation)
+RegisterCVar("MT_OverrideDayProgress", defaults.worldLightQuadraticAttenuation)
 
 -- [[ MachinimaTool Options Panel ]] --
 
@@ -32,6 +35,7 @@ MachinimaToolPanelOptions = {
 	wmoCulling = { text = "WMO Culling" },
 	terrainCulling = { text = "Terrain Culling" },
 	useAlphaAmbienceSound = { text = "Ambience Sound (Alpha Client 0.5.3)" },
+	MT_OverrideDayProgress = { text = "Day Progress Override", minValue = defaults.overrideDayProgress, maxValue = 1.0, valueStep = 0.005, },
 }
 
 -- @robinsch: init these with game time
@@ -49,6 +53,13 @@ function MachinimaTool_UpdateSettings(cvar, value)
 		SetCVar("lightLinearAttenuation", MachinimaToolDB["MT_LightLinearAttenuation"])
 	elseif cvar == "MT_LightQuadraticAttenuation" then
 		SetCVar("lightQuadraticAttenuation", MachinimaToolDB["MT_LightQuadraticAttenuation"])
+	elseif cvar == "MT_OverrideDayProgress" then
+		SetCVar("overrideDayProgress", MachinimaToolDB["MT_OverrideDayProgress"])
+
+		if ( value ~= 0.0 ) then
+			MachinimaToolWorldTimeSpeed:SetValue(0.0166666675359011);
+			MachinimaToolWorldTimeSpeed:Disable();
+		end
 	end
 end
 
@@ -57,6 +68,7 @@ function MachinimaTool_RefreshSettings()
 	MachinimaTool_UpdateSettings("MT_NightLight", tonumber(GetCVar("MT_NightLight")))
 	MachinimaTool_UpdateSettings("MT_LightLinearAttenuation", tonumber(GetCVar("MT_LightLinearAttenuation")))
 	MachinimaTool_UpdateSettings("MT_LightQuadraticAttenuation", tonumber(GetCVar("MT_LightQuadraticAttenuation")))
+	MachinimaTool_UpdateSettings("MT_OverrideDayProgress", tonumber(GetCVar("MT_OverrideDayProgress")))
 end
 
 function MachinimaTool_OnLoad(self)
@@ -82,11 +94,13 @@ function MachinimaTool_OnEvent(self, event, ...)
 				MT_NightLight = defaults.worldNightLight,
 				MT_LightLinearAttenuation = defaults.worldLightLinearAttenuation,
 				MT_LightQuadraticAttenuation = defaults.worldLightQuadraticAttenuation,
+				MT_OverrideDayProgress = defaults.overrideDayProgress,
 			}
 			SetCVar("MT_WorldTimeSpeed", MachinimaToolDB["MT_WorldTimeSpeed"])
 			SetCVar("MT_NightLight", MachinimaToolDB["MT_NightLight"])
 			SetCVar("MT_LightLinearAttenuation", MachinimaToolDB["MT_LightLinearAttenuation"])
 			SetCVar("MT_LightQuadraticAttenuation", MachinimaToolDB["MT_LightQuadraticAttenuation"])
+			SetCVar("MT_OverrideDayProgress", MachinimaToolDB["MT_OverrideDayProgress"])
 			MachinimaTool_RefreshSettings()
 			InterfaceOptionsPanel_OnLoad(self);
 		end
@@ -99,10 +113,14 @@ function MachinimaTool_ResetTimeLocker()
 
 	ResetWorldTime();
 
+	MachinimaTool_UpdateSettings("MT_OverrideDayProgress", 0.0);
+
 	MachinimaToolWorldTimeSpeed:SetMinMaxValues(0, 0);
 	MachinimaToolWorldTimeSpeed:SetMinMaxValues(0.0166666675359011, 50);
 	MachinimaToolWorldTimeSpeed:SetValue(0.0166666675359011);
 	MachinimaToolWorldTimeSpeed:Enable();
+
+	MachinimaTool_RefreshSettings();
 end
 
 function HourDropDown_Initialize()
