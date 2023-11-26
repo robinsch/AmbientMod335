@@ -16,6 +16,10 @@ local defaults = {
 	worldLightQuadraticAttenuationMin = 0.005,
 	worldLightQuadraticAttenuationMax = 1,
 	overrideDayProgress = 0.0,
+	fogDistanceMin = 499,
+	fogDistanceMax = 900,
+	fogDensityMin = 0.001,
+	fogDensityMax = 0.99,
 }
 
 RegisterCVar("MT_WorldTimeSpeed", defaults.worldTimeSpeed)
@@ -24,6 +28,8 @@ RegisterCVar("MT_NightLight", defaults.worldNightLight)
 RegisterCVar("MT_LightLinearAttenuation", defaults.worldLightLinearAttenuation)
 RegisterCVar("MT_LightQuadraticAttenuation", defaults.worldLightQuadraticAttenuation)
 RegisterCVar("MT_OverrideDayProgress", defaults.worldLightQuadraticAttenuation)
+RegisterCVar("MT_FogDistance", defaults.fogDistanceMin)
+RegisterCVar("MT_FogDensity", defaults.fogDensityMax)
 
 -- [[ MachinimaTool Options Panel ]] --
 
@@ -32,8 +38,11 @@ MachinimaToolPanelOptions = {
 	MT_NightLight = { text = "Ambient Shade", minValue = defaults.worldNightLightMin, maxValue = defaults.worldNightLightMax, valueStep = 0.005, },
 	MT_LightLinearAttenuation = { text = "Light Linear Attenuation", minValue = defaults.worldLightLinearAttenuationMin, maxValue = defaults.worldLightLinearAttenuationMax, valueStep = 0.0025, },
 	MT_LightQuadraticAttenuation = { text = "Light Quadratic Attenuation", minValue = defaults.worldLightQuadraticAttenuationMin, maxValue = defaults.worldLightQuadraticAttenuationMax, valueStep = 0.0025, },
+	MT_FogDistance = { text = "Fog Distance", minValue = defaults.fogDistanceMin, maxValue = defaults.fogDistanceMax, valueStep = 1.0, },
+	MT_FogDensity = { text = "Fog Density", minValue = defaults.fogDensityMin, maxValue = defaults.fogDensityMax, valueStep = 0.0025, },
 	wmoCulling = { text = "WMO Culling" },
 	terrainCulling = { text = "Terrain Culling" },
+	lightCulling = { text = "Light Culling" },
 	useAlphaAmbienceSound = { text = "Ambience Sound (Alpha Client 0.5.3)" },
 	MT_OverrideDayProgress = { text = "Day Progress Override", minValue = defaults.overrideDayProgress, maxValue = 1.0, valueStep = 0.005, },
 }
@@ -53,6 +62,10 @@ function MachinimaTool_UpdateSettings(cvar, value)
 		SetCVar("lightLinearAttenuation", MachinimaToolDB["MT_LightLinearAttenuation"])
 	elseif cvar == "MT_LightQuadraticAttenuation" then
 		SetCVar("lightQuadraticAttenuation", MachinimaToolDB["MT_LightQuadraticAttenuation"])
+	elseif cvar == "MT_FogDistance" then
+		SetCVar("fogDistance", MachinimaToolDB["MT_FogDistance"])
+	elseif cvar == "MT_FogDensity" then
+		SetCVar("fogDensity", MachinimaToolDB["MT_FogDensity"])
 	elseif cvar == "MT_OverrideDayProgress" then
 		SetCVar("overrideDayProgress", MachinimaToolDB["MT_OverrideDayProgress"])
 

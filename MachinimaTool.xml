@@ -237,9 +237,77 @@
         </OnValueChanged>
       </Scripts>
     </Slider>
+    <Slider name="$parentFogDistance" inherits="OptionsSliderTemplate">
+      <Anchors>
+        <Anchor point="TOPLEFT" relativeTo="$parentWorldLightLinearAttenuation" x="0" y="-36"/>
+      </Anchors>
+      <Layers>
+        <Layer level="ARTWORK">
+          <FontString name="$parentCurrent" parentKey="Current" inherits="GameFontNormalSmall">
+            <Anchors>
+              <Anchor point="TOP" relativePoint="BOTTOM" x="0" y="-2"/>
+            </Anchors>
+          </FontString>
+        </Layer>
+      </Layers>
+      <Scripts>
+        <OnLoad>
+          local low = _G[self:GetName().."Low"]
+          low:SetText("Lower")
+          local high = _G[self:GetName().."High"]
+          high:SetText("Default")
+          self.type = CONTROLTYPE_SLIDER;
+          self.cvar = "MT_FogDistance";
+          self.SetDisplayValue = self.SetValue;
+          self.SetValue = function (self, value)
+          BlizzardOptionsPanel_SetCVarSafe(self.cvar, value);
+          MachinimaTool_UpdateSettings(self.cvar, value)
+          end
+          BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
+        </OnLoad>
+        <OnValueChanged>
+          self.newValue = value;
+          MachinimaTool_UpdateSettings(self.cvar, value)
+        </OnValueChanged>
+      </Scripts>
+    </Slider>
+    <Slider name="$parentFogDensity" inherits="OptionsSliderTemplate">
+      <Anchors>
+        <Anchor point="TOPLEFT" relativeTo="$parentFogDistance" relativePoint="TOPRIGHT" x="26" y="0"/>
+      </Anchors>
+      <Layers>
+        <Layer level="ARTWORK">
+          <FontString name="$parentCurrent" parentKey="Current" inherits="GameFontNormalSmall">
+            <Anchors>
+              <Anchor point="TOP" relativePoint="BOTTOM" x="0" y="-2"/>
+            </Anchors>
+          </FontString>
+        </Layer>
+      </Layers>
+      <Scripts>
+        <OnLoad>
+          local low = _G[self:GetName().."Low"]
+          low:SetText("Lower")
+          local high = _G[self:GetName().."High"]
+          high:SetText("Default")
+          self.type = CONTROLTYPE_SLIDER;
+          self.cvar = "MT_FogDensity";
+          self.SetDisplayValue = self.SetValue;
+          self.SetValue = function (self, value)
+          BlizzardOptionsPanel_SetCVarSafe(self.cvar, value);
+          MachinimaTool_UpdateSettings(self.cvar, value)
+          end
+          BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
+        </OnLoad>
+        <OnValueChanged>
+          self.newValue = value;
+          MachinimaTool_UpdateSettings(self.cvar, value)
+        </OnValueChanged>
+      </Scripts>
+    </Slider>
     <CheckButton name="$parentWMOCulling" inherits="InterfaceOptionsCheckButtonTemplate">
       <Anchors>
-        <Anchor point="TOPLEFT" relativeTo="$parentWorldLightLinearAttenuation" relativePoint="BOTTOMLEFT">
+        <Anchor point="TOPLEFT" relativeTo="$parentFogDistance" relativePoint="BOTTOMLEFT">
           <Offset x="0" y="-18"/>
         </Anchor>
       </Anchors>
@@ -253,8 +321,8 @@
     </CheckButton>
     <CheckButton name="$parentTerrainCulling" inherits="InterfaceOptionsCheckButtonTemplate">
       <Anchors>
-        <Anchor point="TOPLEFT" relativeTo="$parentWMOCulling" relativePoint="BOTTOMLEFT">
-          <Offset x="0" y="-18"/>
+        <Anchor point="LEFT" relativeTo="$parentWMOCulling">
+          <Offset x="128" y="0"/>
         </Anchor>
       </Anchors>
       <Scripts>
@@ -265,9 +333,23 @@
         </OnLoad>
       </Scripts>
     </CheckButton>
+    <CheckButton name="$parentLightCulling" inherits="InterfaceOptionsCheckButtonTemplate">
+      <Anchors>
+        <Anchor point="LEFT" relativeTo="$parentWorldLightQuadraticAttenuation" relativePoint="LEFT">
+          <Offset x="178" y="0"/>
+        </Anchor>
+      </Anchors>
+      <Scripts>
+        <OnLoad>
+          self.type = CONTROLTYPE_CHECKBOX;
+          self.cvar = "lightCulling";
+          BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
+        </OnLoad>
+      </Scripts>
+    </CheckButton>
     <CheckButton name="$parentAlphaAmbience" inherits="InterfaceOptionsCheckButtonTemplate">
       <Anchors>
-        <Anchor point="TOPLEFT" relativeTo="$parentTerrainCulling" relativePoint="BOTTOMLEFT">
+        <Anchor point="TOPLEFT" relativeTo="$parentWMOCulling" relativePoint="BOTTOMLEFT">
           <Offset x="0" y="-18"/>
         </Anchor>
       </Anchors>
