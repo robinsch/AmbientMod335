@@ -15,21 +15,12 @@ local defaults = {
 	worldLightQuadraticAttenuation = 1,
 	worldLightQuadraticAttenuationMin = 0.005,
 	worldLightQuadraticAttenuationMax = 1,
-	overrideDayProgress = 0.0,
-	fogDistanceMin = 499,
-	fogDistanceMax = 900,
-	fogDensityMin = 0.001,
-	fogDensityMax = 0.99,
 }
 
 RegisterCVar("MT_WorldTimeSpeed", defaults.worldTimeSpeed)
-RegisterCVar("MT_WorldTimeSpeed", defaults.overrideDayProgress)
 RegisterCVar("MT_NightLight", defaults.worldNightLight)
 RegisterCVar("MT_LightLinearAttenuation", defaults.worldLightLinearAttenuation)
 RegisterCVar("MT_LightQuadraticAttenuation", defaults.worldLightQuadraticAttenuation)
-RegisterCVar("MT_OverrideDayProgress", defaults.worldLightQuadraticAttenuation)
-RegisterCVar("MT_FogDistance", defaults.fogDistanceMin)
-RegisterCVar("MT_FogDensity", defaults.fogDensityMax)
 
 -- [[ MachinimaTool Options Panel ]] --
 
@@ -38,13 +29,13 @@ MachinimaToolPanelOptions = {
 	MT_NightLight = { text = "Ambient Shade", minValue = defaults.worldNightLightMin, maxValue = defaults.worldNightLightMax, valueStep = 0.005, },
 	MT_LightLinearAttenuation = { text = "Light Linear Attenuation", minValue = defaults.worldLightLinearAttenuationMin, maxValue = defaults.worldLightLinearAttenuationMax, valueStep = 0.0025, },
 	MT_LightQuadraticAttenuation = { text = "Light Quadratic Attenuation", minValue = defaults.worldLightQuadraticAttenuationMin, maxValue = defaults.worldLightQuadraticAttenuationMax, valueStep = 0.0025, },
-	MT_FogDistance = { text = "Fog Distance", minValue = defaults.fogDistanceMin, maxValue = defaults.fogDistanceMax, valueStep = 1.0, },
-	MT_FogDensity = { text = "Fog Density", minValue = defaults.fogDensityMin, maxValue = defaults.fogDensityMax, valueStep = 0.0025, },
+	fogDistance = { text = "Fog Distance", minValue = 100, maxValue = 1600, valueStep = 1.0, },
+	fogDensity = { text = "Fog Density", minValue = 0.001, maxValue = 1.10, valueStep = 0.0025, },
 	wmoCulling = { text = "WMO Culling" },
 	terrainCulling = { text = "Terrain Culling" },
+	entityCulling = { text = "Entity Culling" },
 	lightCulling = { text = "Light Culling" },
-	useAlphaAmbienceSound = { text = "Ambience Sound (Alpha Client 0.5.3)" },
-	MT_OverrideDayProgress = { text = "Day Progress Override", minValue = defaults.overrideDayProgress, maxValue = 1.0, valueStep = 0.005, },
+	overrideDayProgress = { text = "Day Progress Override", minValue = 0.005, maxValue = 1.0, valueStep = 0.005, },
 }
 
 -- @robinsch: init these with game time
@@ -62,17 +53,6 @@ function MachinimaTool_UpdateSettings(cvar, value)
 		SetCVar("lightLinearAttenuation", MachinimaToolDB["MT_LightLinearAttenuation"])
 	elseif cvar == "MT_LightQuadraticAttenuation" then
 		SetCVar("lightQuadraticAttenuation", MachinimaToolDB["MT_LightQuadraticAttenuation"])
-	elseif cvar == "MT_FogDistance" then
-		SetCVar("fogDistance", MachinimaToolDB["MT_FogDistance"])
-	elseif cvar == "MT_FogDensity" then
-		SetCVar("fogDensity", MachinimaToolDB["MT_FogDensity"])
-	elseif cvar == "MT_OverrideDayProgress" then
-		SetCVar("overrideDayProgress", MachinimaToolDB["MT_OverrideDayProgress"])
-
-		if ( value ~= 0.0 ) then
-			MachinimaToolWorldTimeSpeed:SetValue(0.0166666675359011);
-			MachinimaToolWorldTimeSpeed:Disable();
-		end
 	end
 end
 
@@ -81,21 +61,12 @@ function MachinimaTool_RefreshSettings()
 	MachinimaTool_UpdateSettings("MT_NightLight", tonumber(GetCVar("MT_NightLight")))
 	MachinimaTool_UpdateSettings("MT_LightLinearAttenuation", tonumber(GetCVar("MT_LightLinearAttenuation")))
 	MachinimaTool_UpdateSettings("MT_LightQuadraticAttenuation", tonumber(GetCVar("MT_LightQuadraticAttenuation")))
-	MachinimaTool_UpdateSettings("MT_OverrideDayProgress", tonumber(GetCVar("MT_OverrideDayProgress")))
 end
 
 function MachinimaTool_OnLoad(self)
 	self:RegisterEvent("ADDON_LOADED")
 	self.name = addonName;
 	self.options = MachinimaToolPanelOptions;
-
-	UIDropDownMenu_SetWidth(MachinimaToolHourDropDown, 30, 40);
-	UIDropDownMenu_SetText(MachinimaToolHourDropDown, format(TIMEMANAGER_24HOUR, 0));
-	UIDropDownMenu_Initialize(MachinimaToolHourDropDown, HourDropDown_Initialize);
-
-	UIDropDownMenu_SetWidth(MachinimaToolMinuteDropDown, 30, 40);
-	UIDropDownMenu_SetText(MachinimaToolMinuteDropDown, format(TIMEMANAGER_MINUTE, 0));
-	UIDropDownMenu_Initialize(MachinimaToolMinuteDropDown, MinuteDropDown_Initialize);
 end
 
 function MachinimaTool_OnEvent(self, event, ...)
@@ -107,13 +78,11 @@ function MachinimaTool_OnEvent(self, event, ...)
 				MT_NightLight = defaults.worldNightLight,
 				MT_LightLinearAttenuation = defaults.worldLightLinearAttenuation,
 				MT_LightQuadraticAttenuation = defaults.worldLightQuadraticAttenuation,
-				MT_OverrideDayProgress = defaults.overrideDayProgress,
 			}
 			SetCVar("MT_WorldTimeSpeed", MachinimaToolDB["MT_WorldTimeSpeed"])
 			SetCVar("MT_NightLight", MachinimaToolDB["MT_NightLight"])
 			SetCVar("MT_LightLinearAttenuation", MachinimaToolDB["MT_LightLinearAttenuation"])
 			SetCVar("MT_LightQuadraticAttenuation", MachinimaToolDB["MT_LightQuadraticAttenuation"])
-			SetCVar("MT_OverrideDayProgress", MachinimaToolDB["MT_OverrideDayProgress"])
 			MachinimaTool_RefreshSettings()
 			InterfaceOptionsPanel_OnLoad(self);
 		end
@@ -121,12 +90,9 @@ function MachinimaTool_OnEvent(self, event, ...)
 end
 
 function MachinimaTool_ResetTimeLocker()
-	UIDropDownMenu_SetSelectedValue(MachinimaToolHourDropDown, 0);
-	UIDropDownMenu_SetSelectedValue(MachinimaToolMinuteDropDown, 0);
-
 	ResetWorldTime();
 
-	MachinimaTool_UpdateSettings("MT_OverrideDayProgress", 0.0);
+	SetCVar("overrideDayProgress", 0.0);
 
 	MachinimaToolWorldTimeSpeed:SetMinMaxValues(0, 0);
 	MachinimaToolWorldTimeSpeed:SetMinMaxValues(0.0166666675359011, 50);
@@ -163,24 +129,3 @@ function MinuteDropDown_Initialize()
 	end
 end
 
-function HourDropDown_OnClick(self)
-	UIDropDownMenu_SetSelectedValue(MachinimaToolHourDropDown, self.value);
-	SET_HOUR = self.value;
-
-	MachinimaToolWorldTimeSpeed:SetValue(0.0166666675359011);
-	MachinimaToolWorldTimeSpeed:Disable();
-
-	SetWorldTime(SET_HOUR, SET_MINUTE);
-	SetWorldTimeSpeed(0);
-end
-
-function MinuteDropDown_OnClick(self)
-	UIDropDownMenu_SetSelectedValue(MachinimaToolMinuteDropDown, self.value);
-	SET_MINUTE = self.value;
-
-	MachinimaToolWorldTimeSpeed:SetValue(0.0166666675359011);
-	MachinimaToolWorldTimeSpeed:Disable();
-
-	SetWorldTime(SET_HOUR, SET_MINUTE);
-	SetWorldTimeSpeed(0);
-end
