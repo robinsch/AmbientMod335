@@ -34,7 +34,11 @@ MachinimaToolPanelOptions = {
 	wmoCulling = { text = "WMO Culling" },
 	terrainCulling = { text = "Terrain Culling" },
 	entityCulling = { text = "Entity Culling" },
+	entityShadows = { text = "Entity Shadows" },
+	staticLOD = { text = "Static LOD" },
+	boostCPU = { text = "GPU Boost" },
 	lightCulling = { text = "Light Culling" },
+	lightLimitFix = { text = "Light Limit Patch" },
 	overrideDayProgress = { text = "Day Progress Override", minValue = 0.005, maxValue = 1.0, valueStep = 0.005, },
 }
 

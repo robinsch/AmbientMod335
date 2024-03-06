@@ -310,6 +310,48 @@
         </OnLoad>
       </Scripts>
     </CheckButton>
+        <CheckButton name="$parentEntityShadows" inherits="InterfaceOptionsCheckButtonTemplate">
+      <Anchors>
+        <Anchor point="LEFT" relativeTo="$parentEntityCulling">
+          <Offset x="128" y="0"/>
+        </Anchor>
+      </Anchors>
+      <Scripts>
+        <OnLoad>
+          self.type = CONTROLTYPE_CHECKBOX;
+          self.cvar = "entityShadows";
+          BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
+        </OnLoad>
+      </Scripts>
+    </CheckButton>
+    <CheckButton name="$parentStaticLOD" inherits="InterfaceOptionsCheckButtonTemplate">
+      <Anchors>
+        <Anchor point="LEFT" relativeTo="$parentEntityShadows">
+          <Offset x="128" y="0"/>
+        </Anchor>
+      </Anchors>
+      <Scripts>
+        <OnLoad>
+          self.type = CONTROLTYPE_CHECKBOX;
+          self.cvar = "staticLOD";
+          BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
+        </OnLoad>
+      </Scripts>
+    </CheckButton>
+    <CheckButton name="$parentBoostCPU" inherits="InterfaceOptionsCheckButtonTemplate">
+      <Anchors>
+        <Anchor point="LEFT" relativeTo="$parentStaticLOD">
+          <Offset x="0" y="-30"/>
+        </Anchor>
+      </Anchors>
+      <Scripts>
+        <OnLoad>
+          self.type = CONTROLTYPE_CHECKBOX;
+          self.cvar = "boostCPU";
+          BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
+        </OnLoad>
+      </Scripts>
+    </CheckButton>
     <CheckButton name="$parentLightCulling" inherits="InterfaceOptionsCheckButtonTemplate">
       <Anchors>
         <Anchor point="LEFT" relativeTo="$parentWorldLightQuadraticAttenuation" relativePoint="LEFT">
@@ -320,6 +362,20 @@
         <OnLoad>
           self.type = CONTROLTYPE_CHECKBOX;
           self.cvar = "lightCulling";
+          BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
+        </OnLoad>
+      </Scripts>
+    </CheckButton>
+    <CheckButton name="$parentLightLimitFix" inherits="InterfaceOptionsCheckButtonTemplate">
+      <Anchors>
+        <Anchor point="RIGHT" relativeTo="$parentLightCulling">
+          <Offset x="120" y="0"/>
+        </Anchor>
+      </Anchors>
+      <Scripts>
+        <OnLoad>
+          self.type = CONTROLTYPE_CHECKBOX;
+          self.cvar = "lightLimitFix";
           BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
         </OnLoad>
       </Scripts>
