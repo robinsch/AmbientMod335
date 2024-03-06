@@ -1,9 +1,9 @@
 ﻿<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ http://wowprogramming.com/FrameXML/UI.xsd">
 
-<Frame name="MachinimaTool" hidden="true" parent="InterfaceOptionsFramePanelContainer">
+<Frame name="AmbientMod" hidden="true" parent="InterfaceOptionsFramePanelContainer">
   <Layers>
     <Layer level="ARTWORK">
-      <FontString name="$parentTitle" text="Machinima Tool" inherits="GameFontNormalLarge" justifyH="LEFT" justifyV="TOP">
+      <FontString name="$parentTitle" text="AmbientMod" inherits="GameFontNormalLarge" justifyH="LEFT" justifyV="TOP">
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
@@ -47,22 +47,16 @@
       </Layers>
       <Scripts>
         <OnLoad>
-          local low = _G[self:GetName().."Low"]
-          low:SetText("Default")
-          local high = _G[self:GetName().."High"]
-          high:SetText("Faster")
-          self.type = CONTROLTYPE_SLIDER;
-          self.cvar = "MT_WorldTimeSpeed";
-          self.SetDisplayValue = self.SetValue;
-          self.SetValue = function (self, value)
-            BlizzardOptionsPanel_SetCVarSafe(self.cvar, value);
-            MachinimaTool_UpdateSettings(self.cvar, value)
-          end
-          BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
+            local low = _G[self:GetName().."Low"]
+            low:SetText("Default")
+            local high = _G[self:GetName().."High"]
+            high:SetText("Faster")
+            self.type = CONTROLTYPE_SLIDER;
+            self.cvar = "worldTimeSpeed";
+            BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
         </OnLoad>
         <OnValueChanged>
-          self.newValue = value;
-          MachinimaTool_UpdateSettings(self.cvar, value)
+            SetWorldTimeSpeed(value);
         </OnValueChanged>
       </Scripts>
     </Slider>
@@ -104,7 +98,7 @@
       <Scripts>
         <OnClick>
           PlaySound("gsTitleOptionOK");
-          MachinimaTool_ResetTimeLocker();
+          AmbientMod_ResetTimeLocker();
         </OnClick>
       </Scripts>
       <NormalFont style="GameFontNormalSmall"/>
@@ -125,22 +119,16 @@
       </Layers>
       <Scripts>
         <OnLoad>
-          local low = _G[self:GetName().."Low"]
-          low:SetText("Darker")
-          local high = _G[self:GetName().."High"]
-          high:SetText("Default")
-          self.type = CONTROLTYPE_SLIDER;
-          self.cvar = "MT_NightLight";
-          self.SetDisplayValue = self.SetValue;
-          self.SetValue = function (self, value)
-          BlizzardOptionsPanel_SetCVarSafe(self.cvar, value);
-          MachinimaTool_UpdateSettings(self.cvar, value)
-          end
-          BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
+            local low = _G[self:GetName().."Low"]
+            low:SetText("Darker")
+            local high = _G[self:GetName().."High"]
+            high:SetText("Default")
+            self.type = CONTROLTYPE_SLIDER;
+            self.cvar = "ambientShade";
+            BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
         </OnLoad>
         <OnValueChanged>
-          self.newValue = value;
-          MachinimaTool_UpdateSettings(self.cvar, value)
+            SetCVar(self.cvar, value);
         </OnValueChanged>
       </Scripts>
     </Slider>
@@ -159,22 +147,16 @@
       </Layers>
       <Scripts>
         <OnLoad>
-          local low = _G[self:GetName().."Low"]
-          low:SetText("Lower")
-          local high = _G[self:GetName().."High"]
-          high:SetText("Default")
-          self.type = CONTROLTYPE_SLIDER;
-          self.cvar = "MT_LightLinearAttenuation";
-          self.SetDisplayValue = self.SetValue;
-          self.SetValue = function (self, value)
-          BlizzardOptionsPanel_SetCVarSafe(self.cvar, value);
-          MachinimaTool_UpdateSettings(self.cvar, value)
-          end
-          BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
+            local low = _G[self:GetName().."Low"]
+            low:SetText("Lower")
+            local high = _G[self:GetName().."High"]
+            high:SetText("Default")
+            self.type = CONTROLTYPE_SLIDER;
+            self.cvar = "lightLinearAttenuation";
+            BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
         </OnLoad>
         <OnValueChanged>
-          self.newValue = value;
-          MachinimaTool_UpdateSettings(self.cvar, value)
+            SetCVar(self.cvar, value);
         </OnValueChanged>
       </Scripts>
     </Slider>
@@ -198,17 +180,11 @@
           local high = _G[self:GetName().."High"]
           high:SetText("Default")
           self.type = CONTROLTYPE_SLIDER;
-          self.cvar = "MT_LightQuadraticAttenuation";
-          self.SetDisplayValue = self.SetValue;
-          self.SetValue = function (self, value)
-          BlizzardOptionsPanel_SetCVarSafe(self.cvar, value);
-          MachinimaTool_UpdateSettings(self.cvar, value)
-          end
+          self.cvar = "lightQuadraticAttenuation";
           BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
         </OnLoad>
         <OnValueChanged>
-          self.newValue = value;
-          MachinimaTool_UpdateSettings(self.cvar, value)
+            SetCVar(self.cvar, value);
         </OnValueChanged>
       </Scripts>
     </Slider>
@@ -338,20 +314,6 @@
         </OnLoad>
       </Scripts>
     </CheckButton>
-    <CheckButton name="$parentBoostCPU" inherits="InterfaceOptionsCheckButtonTemplate">
-      <Anchors>
-        <Anchor point="LEFT" relativeTo="$parentStaticLOD">
-          <Offset x="0" y="-30"/>
-        </Anchor>
-      </Anchors>
-      <Scripts>
-        <OnLoad>
-          self.type = CONTROLTYPE_CHECKBOX;
-          self.cvar = "boostCPU";
-          BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
-        </OnLoad>
-      </Scripts>
-    </CheckButton>
     <CheckButton name="$parentLightCulling" inherits="InterfaceOptionsCheckButtonTemplate">
       <Anchors>
         <Anchor point="LEFT" relativeTo="$parentWorldLightQuadraticAttenuation" relativePoint="LEFT">
@@ -382,8 +344,8 @@
     </CheckButton>
   </Frames>
   <Scripts>
-    <OnLoad function="MachinimaTool_OnLoad"/>
-    <OnEvent function="MachinimaTool_OnEvent"/>
+    <OnLoad function="AmbientMod_OnLoad"/>
+    <OnEvent function="AmbientMod_OnEvent"/>
   </Scripts>
 </Frame>
 </Ui>

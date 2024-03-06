@@ -1,0 +1,7 @@
+## Interface: 30300
+## Title: AmbientMod
+## Notes: AddOn for AmbientMod335
+## SavedVariables: AmbientMod
+
+AmbientMod.lua
+AmbientMod.xml

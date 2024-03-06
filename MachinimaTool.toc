@@ -1,7 +1,0 @@
-## Interface: 30300
-## Title: MachinimaTool
-## Notes: AddOn for WoWMachinimaTool 3.3.5
-## SavedVariables: MachinimaToolDB
-
-MachinimaTool.lua
-MachinimaTool.xml
